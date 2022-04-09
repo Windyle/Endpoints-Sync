@@ -1,4 +1,6 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
+
+require('dotenv').config();
 
 // INTERFACES
 
@@ -23,17 +25,15 @@ interface GitHub {
  */
 
 function TodoistTasks(projectId : string, sectionId : string) : any {
-  const config = {
+  const url = `https://api.todoist.com/rest/v1/tasks?project_id=${projectId}&section_id=${sectionId}`;
+  const config: AxiosRequestConfig = {
     method: 'get',
-    url: `https://api.todoist.com/rest/v1/tasks?project_id=${projectId}&section_id=${sectionId}`,
     headers: {
       Authorization: `Bearer ${process.env.TODOIST_KEY}`,
     },
   };
 
-  process.stdout.write(`https://api.todoist.com/rest/v1/tasks?project_id=${projectId}&section_id=${sectionId}\n`);
-
-  axios(JSON.stringify(config))
+  axios(url, config)
     .then((response) => {
       process.stdout.write(`${JSON.stringify(response.data)}\n`);
     })
