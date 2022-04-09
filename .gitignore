@@ -104,4 +104,4 @@ dist
 .tern-port
 
 # integration file with endpoint ids
-src/integrations.js
+**/src/integrations.ts
