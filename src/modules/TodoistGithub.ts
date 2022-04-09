@@ -27,7 +27,7 @@ function TodoistTasks(projectId : string, sectionId : string) : any {
     method: 'get',
     url: `https://api.todoist.com/rest/v1/tasks?project_id=${projectId}&section_id=${sectionId}`,
     headers: {
-      Authorization: 'Bearer cda3dae363a1b9581e29cfaa417968661363ff1d',
+      Authorization: `Bearer ${process.env.TODOIST_KEY}`,
     },
   };
 
