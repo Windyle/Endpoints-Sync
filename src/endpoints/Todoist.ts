@@ -72,7 +72,13 @@ const Todoist = {
 
         await axios(config)
           .then((response: any) => {
-            process.stdout.write(`${JSON.stringify(response.data)}\n\n`);
+            const updatedDescription: string = `[${response.data.id}](${response.data.url})\n${task.description}`;
+
+            api.updateTask(task.id, { description: updatedDescription })
+              .then((isSuccess: boolean) => {
+                if (isSuccess) { process.stdout.write(`Updated Task: ${task.id}\n`); } else { process.stdout.write(`Couldn't update Task: ${task.id}\n`); }
+              })
+              .catch((error: any) => process.stderr.write(`${error}\n`));
           })
           .catch((error: any) => {
             process.stderr.write(`${error}\n`);
