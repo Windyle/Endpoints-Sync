@@ -20,8 +20,18 @@ interface TrelloInfo {
   feature_label: string;
 }
 
-const sync = (_todoist: TodoistInfo, _trello: TrelloInfo) : void => {
-  Todoist.addNewTasks_Trello(_todoist, _trello);
+const sync = async (_todoist: TodoistInfo, _trello: TrelloInfo) : Promise<void> => {
+  try {
+    const updateTasksErrors: boolean = await Todoist.updateTasks_Trello(_todoist, _trello);
+
+    if (updateTasksErrors === true) { throw new Error('An error has occurred while updating tasks on Trello!'); }
+
+    const newTasksErrors: boolean = await Todoist.addNewTasks_Trello(_todoist, _trello);
+
+    if (newTasksErrors === true) { throw new Error('An error has occurred while creating new tasks on Trello!'); }
+  } catch (error : any) {
+    process.stderr.write(`${error}\n`);
+  }
 };
 
 export default sync;
