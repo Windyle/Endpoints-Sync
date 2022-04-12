@@ -9,18 +9,22 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 require('dotenv').config();
 
 try {
-  integrations.forEach((integration) => {
-    const endpointsTypes: string[] = integration.endpoints.map((end) => end.type).sort();
+  setInterval(() => {
+    process.stdout.write(`-- POLLING: ${new Date().toString()}\n`);
 
-    if (endpointsTypes[0] === 'todoist') {
-      if (endpointsTypes[1] === 'trello') {
-        const todoist : any = integration.endpoints.find((end) => end.type === 'todoist');
-        const trello : any = integration.endpoints.find((end) => end.type === 'trello');
+    integrations.forEach((integration) => {
+      const endpointsTypes: string[] = integration.endpoints.map((end) => end.type).sort();
 
-        tdtrSync(todoist, trello);
+      if (endpointsTypes[0] === 'todoist') {
+        if (endpointsTypes[1] === 'trello') {
+          const todoist : any = integration.endpoints.find((end) => end.type === 'todoist');
+          const trello : any = integration.endpoints.find((end) => end.type === 'trello');
+
+          tdtrSync(todoist, trello);
+        }
       }
-    }
-  });
+    });
+  }, 10000);
 } catch (err: any) {
   process.stderr.write(`Index.js: ${err.toString()}`);
 }

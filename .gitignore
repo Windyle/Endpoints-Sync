@@ -106,3 +106,4 @@ dist
 # Build Data
 **/src/integrations_list.ts
 .dist
+**/start_schedule.bat
