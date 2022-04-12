@@ -23,6 +23,7 @@ const Todoist = {
   addNewTasks_Trello: async (_todoist: TodoistInfo, _trello: TrelloInfo) : Promise<boolean> => {
     try {
       if (process.env.TODOIST_API_KEY === undefined) { throw new Error('No Todoist API Key has been provided!'); }
+      if (process.env.TRELLO_API_KEY === undefined || process.env.TRELLO_API_TOKEN === undefined) { throw new Error('No Trello API Key and/or Secret has been provided!'); }
 
       const api: any = new TodoistApi(process.env.TODOIST_API_KEY);
 
@@ -61,11 +62,10 @@ const Todoist = {
 
         const config: AxiosRequestConfig = {
           method: 'post',
-          url: 'https://api.trello.com/1/cards?key=bb007d1f4a2cd334a5389dda563de402&token=06782038f9e6a514328f2f7c7e28669e4f1ebd0df4e0824f038858452766f869',
+          url: `https://api.trello.com/1/cards?key=${process.env.TRELLO_API_KEY}&token=${process.env.TRELLO_API_TOKEN}`,
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            Cookie: 'dsc=adce22b70cf269d3693ac58961e7687962bfbeb5ed63acc3783ce4b6ed69688f; preAuthProps=s%3A564dc978b8f0a93b9ad21c36%3AisEnterpriseAdmin%3Dfalse.xZZHnVQi7hp5Ac32z2eggi9i0r29YsoAuIjV3xrbxaY',
           },
           data,
         };
