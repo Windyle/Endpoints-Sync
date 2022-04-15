@@ -2,9 +2,9 @@
 /* eslint-disable import/extensions */
 import { integrations } from './integrations_list';
 
-import tdtrSync from './integrations/Trello_Todoist';
+import tdtrSync from './integrations/Todoist_Trello';
 
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 require('dotenv').config();
 

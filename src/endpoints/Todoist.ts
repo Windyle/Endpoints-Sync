@@ -127,7 +127,7 @@ const Todoist = {
 
         const data = JSON.stringify({
           name: task.content,
-          description,
+          desc: description,
           idList: trelloListId,
           idLabels: task.labelIds.map((label: any) => {
             if (label === _todoist.bug_label) return _trello.bug_label;
@@ -147,7 +147,7 @@ const Todoist = {
 
         await axios(updateConfig)
           .then(() => {
-            process.stdout.write(`Updated Task on Trello: ${task.id}\n`);
+            process.stdout.write(`Updated Task ${task.id} on Trello: ${trelloCardId}\n`);
 
             if (task.sectionId === _todoist.sections[_todoist.sections.length - 1]) {
               api.closeTask(task.id)
