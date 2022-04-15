@@ -18,6 +18,9 @@ interface TrelloInfo {
   bug_label: string;
   style_label: string;
   feature_label: string;
+  high_label: string;
+  medium_label: string;
+  low_label: string;
 }
 
 const sync = async (_todoist: TodoistInfo, _trello: TrelloInfo) : Promise<void> => {
