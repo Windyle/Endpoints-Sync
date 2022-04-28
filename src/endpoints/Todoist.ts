@@ -153,31 +153,39 @@ const Todoist = {
         const description: string = task.description.substring(task.description.indexOf(')') + 3, task.description.length);
         const trelloListId: string = _trello.lists[_todoist.sections.indexOf(task.sectionId)];
 
+        let taskLabels: string = '';
+        if (task.labelIds.length > 0) {
+          taskLabels = task.labelIds.map((label: any) => {
+            if (label === _todoist.bug_label) return _trello.bug_label;
+            if (label === _todoist.style_label) return _trello.style_label;
+            return _trello.feature_label;
+          }).join(',');
+        }
+
         let priorityLabel: string = '';
         if (task.priority > 1 && trelloListId !== _trello.lists[_trello.lists.length - 1]) {
           switch (task.priority) {
             case 2:
-              priorityLabel = `,${_trello.low_label}`;
+              priorityLabel = `${_trello.low_label}`;
               break;
             case 3:
-              priorityLabel = `,${_trello.medium_label}`;
+              priorityLabel = `${_trello.medium_label}`;
               break;
             default:
-              priorityLabel = `,${_trello.high_label}`;
+              priorityLabel = `${_trello.high_label}`;
               break;
           }
         }
+
+        let labelsComma: string = '';
+        if (taskLabels !== '' && priorityLabel !== '') { labelsComma = ','; }
 
         const data = JSON.stringify({
           name: task.content,
           desc: description,
           pos: task.priority === 4 ? 'top' : 'bottom',
           idList: trelloListId,
-          idLabels: task.labelIds.map((label: any) => {
-            if (label === _todoist.bug_label) return _trello.bug_label;
-            if (label === _todoist.style_label) return _trello.style_label;
-            return _trello.feature_label;
-          }).join(',') + priorityLabel,
+          idLabels: taskLabels + labelsComma + priorityLabel,
         });
 
         const updateConfig: AxiosRequestConfig = {
