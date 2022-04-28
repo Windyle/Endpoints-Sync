@@ -52,31 +52,39 @@ const Todoist = {
       newTasks.forEach(async (task) => {
         const trelloListId: string = _trello.lists[_todoist.sections.indexOf(task.sectionId)];
 
+        let taskLabels: string = '';
+        if (task.labelIds.length > 0) {
+          taskLabels = task.labelIds.map((label: any) => {
+            if (label === _todoist.bug_label) return _trello.bug_label;
+            if (label === _todoist.style_label) return _trello.style_label;
+            return _trello.feature_label;
+          }).join(',');
+        }
+
         let priorityLabel: string = '';
         if (task.priority > 1) {
           switch (task.priority) {
             case 2:
-              priorityLabel = `,${_trello.low_label}`;
+              priorityLabel = `${_trello.low_label}`;
               break;
             case 3:
-              priorityLabel = `,${_trello.medium_label}`;
+              priorityLabel = `${_trello.medium_label}`;
               break;
             default:
-              priorityLabel = `,${_trello.high_label}`;
+              priorityLabel = `${_trello.high_label}`;
               break;
           }
         }
+
+        let labelsComma = '';
+        if (taskLabels !== '' && priorityLabel !== '') { labelsComma = ','; }
 
         const data = JSON.stringify({
           name: task.content,
           desc: task.description,
           idList: trelloListId,
           pos: task.priority === 4 ? 'top' : 'bottom',
-          idLabels: task.labelIds.map((label: any) => {
-            if (label === _todoist.bug_label) return _trello.bug_label;
-            if (label === _todoist.style_label) return _trello.style_label;
-            return _trello.feature_label;
-          }).join(',') + priorityLabel,
+          idLabels: taskLabels + labelsComma + priorityLabel,
         });
 
         const config: AxiosRequestConfig = {
@@ -100,7 +108,7 @@ const Todoist = {
               .catch((error: any) => process.stderr.write(`${error}\n`));
           })
           .catch((error: any) => {
-            process.stderr.write(`${error}\n`);
+            process.stderr.write(`${error}\n${JSON.stringify(config)}\n`);
             throw new Error(error);
           });
       });
